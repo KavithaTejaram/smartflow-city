@@ -132,7 +132,7 @@ const Home = () => (
     {/* Footer */}
     <footer className="border-t border-border py-8">
       <div className="container text-center text-xs text-muted-foreground font-mono">
-        SATS v1.0 · Smart Adaptive Traffic System · Built for Bengaluru
+        FirstMove v1.0 · Smart Moves First · Built for Bengaluru
       </div>
     </footer>
   </div>
