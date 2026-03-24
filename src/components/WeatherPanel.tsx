@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
 function WeatherPanel() {
-  const [rainFactor, setRainFactor] = useState<number>(0);
+  
+  const [rainFactor, setRainFactor] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("https://api.open-meteo.com/v1/forecast?latitude=12.9716&longitude=77.5946&hourly=precipitation")
