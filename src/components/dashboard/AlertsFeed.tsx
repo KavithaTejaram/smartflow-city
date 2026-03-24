@@ -1,11 +1,15 @@
 import { AlertTriangle, Construction, Siren, CloudRain, Users } from "lucide-react";
+import { WEATHER_TRAFFIC, AREA_STATS } from "@/data/trafficData";
+
+const topArea = AREA_STATS[0];
+const rainData = WEATHER_TRAFFIC.find((w) => w.condition === "Rain")!;
 
 const alerts = [
-  { icon: Siren, text: "Emergency vehicle detected near Silk Board Junction", time: "2m ago", type: "destructive" as const },
-  { icon: Construction, text: "Road maintenance on Hosur Road - Lane 2 blocked", time: "15m ago", type: "warning" as const },
-  { icon: CloudRain, text: "Heavy rain predicted in Whitefield zone at 4PM", time: "30m ago", type: "warning" as const },
-  { icon: Users, text: "High pedestrian density at MG Road metro exit", time: "45m ago", type: "neutral" as const },
-  { icon: AlertTriangle, text: "Congestion spike predicted at KR Puram junction", time: "1h ago", type: "destructive" as const },
+  { icon: Siren, text: `Emergency vehicle detected near ${topArea.name} (Congestion: ${topArea.congestion}%)`, time: "2m ago", type: "destructive" as const },
+  { icon: Construction, text: "Road maintenance on Hosur Road — Lane 2 blocked", time: "15m ago", type: "warning" as const },
+  { icon: CloudRain, text: `Rain alert: Avg volume rises to ${rainData.avgVolume.toLocaleString()} vehicles`, time: "30m ago", type: "warning" as const },
+  { icon: Users, text: `${rainData.pedestrians} avg pedestrians detected across junctions`, time: "45m ago", type: "neutral" as const },
+  { icon: AlertTriangle, text: `${AREA_STATS[1].name} congestion at ${AREA_STATS[1].congestion}% — rerouting active`, time: "1h ago", type: "destructive" as const },
 ];
 
 const typeStyles = {
