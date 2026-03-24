@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import AppNavbar from "@/components/AppNavbar";
 import WeatherPanel from "@/components/WeatherPanel";
+import TrafficPanel from "@/components/TrafficPanel";
+import BengaluruMap from "@/components/BengaluruMap";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Simulation from "./pages/Simulation";
@@ -21,8 +23,10 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AppNavbar />
-        <div className="container pt-20 pb-4">
+        <div className="container pt-20 pb-4 space-y-4">
           <WeatherPanel />
+          <TrafficPanel />
+          <BengaluruMap />
         </div>
         <Routes>
           <Route path="/" element={<Home />} />
