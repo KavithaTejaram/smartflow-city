@@ -1,53 +1,43 @@
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar } from "recharts";
 import { motion } from "framer-motion";
+import { MONTHLY_TRENDS, AREA_STATS, WEATHER_TRAFFIC, WEATHER_CLASSES, DATASET_INFO } from "@/data/trafficData";
+import { Database } from "lucide-react";
 
-const weeklyData = [
-  { day: "Mon", congestion: 72, resolved: 45 },
-  { day: "Tue", congestion: 68, resolved: 52 },
-  { day: "Wed", congestion: 80, resolved: 48 },
-  { day: "Thu", congestion: 75, resolved: 60 },
-  { day: "Fri", congestion: 90, resolved: 55 },
-  { day: "Sat", congestion: 45, resolved: 30 },
-  { day: "Sun", congestion: 35, resolved: 20 },
-];
+const monthlyChart = MONTHLY_TRENDS.map((m) => ({
+  month: m.month,
+  congestion: Math.round(m.congestion),
+  incidents: m.incidents,
+}));
 
-const zoneData = [
-  { name: "Whitefield", value: 30 },
-  { name: "Koramangala", value: 22 },
-  { name: "MG Road", value: 18 },
-  { name: "Silk Board", value: 20 },
-  { name: "Others", value: 10 },
-];
+const zoneData = AREA_STATS.slice(0, 5).map((a) => ({
+  name: a.name,
+  value: Math.round(a.congestion),
+}));
 
-const COLORS = [
-  "hsl(185,80%,50%)", "hsl(160,70%,45%)", "hsl(38,92%,55%)", "hsl(0,75%,55%)", "hsl(215,15%,55%)",
-];
+const COLORS = ["hsl(0,75%,50%)", "hsl(0,60%,40%)", "hsl(38,92%,55%)", "hsl(145,65%,45%)", "hsl(0,0%,50%)"];
 
 const radarData = [
-  { metric: "Speed", value: 78 },
+  { metric: "Speed", value: Math.round(AREA_STATS.reduce((s, a) => s + a.avgSpeed, 0) / AREA_STATS.length) },
   { metric: "Safety", value: 85 },
   { metric: "Eco Score", value: 72 },
   { metric: "Efficiency", value: 80 },
-  { metric: "Coverage", value: 90 },
+  { metric: "Coverage", value: Math.round((DATASET_INFO.roads / 20) * 100) },
   { metric: "Response", value: 88 },
 ];
 
-const emissionData = [
-  { month: "Jan", co2: 420, saved: 120 },
-  { month: "Feb", co2: 380, saved: 150 },
-  { month: "Mar", co2: 350, saved: 180 },
-  { month: "Apr", co2: 320, saved: 200 },
-  { month: "May", co2: 300, saved: 230 },
-  { month: "Jun", co2: 280, saved: 250 },
-];
+const weatherChart = WEATHER_TRAFFIC.map((w) => ({
+  condition: w.condition,
+  volume: Math.round(w.avgVolume / 1000),
+  congestion: Math.round(w.congestion),
+}));
 
 const tooltipStyle = {
-  backgroundColor: "hsl(220,40%,9%)",
-  border: "1px solid hsl(220,30%,18%)",
+  backgroundColor: "hsl(0,0%,8%)",
+  border: "1px solid hsl(0,0%,15%)",
   borderRadius: "8px",
   fontFamily: "JetBrains Mono",
   fontSize: "11px",
-  color: "hsl(200,20%,90%)",
+  color: "hsl(0,0%,90%)",
 };
 
 const Analytics = () => (
@@ -55,22 +45,25 @@ const Analytics = () => (
     <div className="container py-8">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground">Analytics & Reports</h1>
-        <p className="text-sm text-muted-foreground">System performance insights and environmental impact</p>
+        <p className="text-sm text-muted-foreground flex items-center gap-2">
+          <Database className="h-3.5 w-3.5" />
+          Based on {DATASET_INFO.trafficRecords.toLocaleString()} traffic + {DATASET_INFO.weatherRecords.toLocaleString()} weather records ({DATASET_INFO.dateRange})
+        </p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        {/* Weekly congestion */}
+        {/* Monthly congestion & incidents */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl border border-border bg-card p-5">
-          <h3 className="text-sm font-semibold text-foreground mb-4">Weekly Congestion vs Resolved</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-4">Monthly Congestion vs Incidents</h3>
           <div className="h-64">
             <ResponsiveContainer>
-              <BarChart data={weeklyData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(220,30%,18%)" />
-                <XAxis dataKey="day" stroke="hsl(215,15%,55%)" fontSize={11} fontFamily="JetBrains Mono" />
-                <YAxis stroke="hsl(215,15%,55%)" fontSize={11} fontFamily="JetBrains Mono" />
+              <BarChart data={monthlyChart}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(0,0%,15%)" />
+                <XAxis dataKey="month" stroke="hsl(0,0%,50%)" fontSize={11} fontFamily="JetBrains Mono" />
+                <YAxis stroke="hsl(0,0%,50%)" fontSize={11} fontFamily="JetBrains Mono" />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Bar dataKey="congestion" fill="hsl(185,80%,50%)" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="resolved" fill="hsl(160,70%,45%)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="congestion" fill="hsl(0,75%,50%)" radius={[4, 4, 0, 0]} name="Congestion %" />
+                <Bar dataKey="incidents" fill="hsl(0,60%,40%)" radius={[4, 4, 0, 0]} name="Incidents" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -78,7 +71,7 @@ const Analytics = () => (
 
         {/* Zone distribution */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl border border-border bg-card p-5">
-          <h3 className="text-sm font-semibold text-foreground mb-4">Congestion by Zone</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-4">Congestion by Area (Top 5)</h3>
           <div className="h-64 flex items-center">
             <ResponsiveContainer>
               <PieChart>
@@ -95,7 +88,7 @@ const Analytics = () => (
             {zoneData.map((z, i) => (
               <span key={z.name} className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <span className="h-2 w-2 rounded-full" style={{ backgroundColor: COLORS[i] }} />
-                {z.name}
+                {z.name} ({z.value}%)
               </span>
             ))}
           </div>
@@ -107,27 +100,27 @@ const Analytics = () => (
           <div className="h-64">
             <ResponsiveContainer>
               <RadarChart data={radarData}>
-                <PolarGrid stroke="hsl(220,30%,18%)" />
-                <PolarAngleAxis dataKey="metric" stroke="hsl(215,15%,55%)" fontSize={10} fontFamily="JetBrains Mono" />
-                <Radar dataKey="value" stroke="hsl(185,80%,50%)" fill="hsl(185,80%,50%)" fillOpacity={0.2} />
+                <PolarGrid stroke="hsl(0,0%,15%)" />
+                <PolarAngleAxis dataKey="metric" stroke="hsl(0,0%,50%)" fontSize={10} fontFamily="JetBrains Mono" />
+                <Radar dataKey="value" stroke="hsl(0,75%,50%)" fill="hsl(0,75%,50%)" fillOpacity={0.15} />
               </RadarChart>
             </ResponsiveContainer>
           </div>
         </motion.div>
 
-        {/* Emission savings */}
+        {/* Weather impact */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-xl border border-border bg-card p-5">
-          <h3 className="text-sm font-semibold text-foreground mb-4">CO₂ Emissions & Savings (tons)</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-4">Weather Impact on Traffic</h3>
           <div className="h-64">
             <ResponsiveContainer>
-              <LineChart data={emissionData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(220,30%,18%)" />
-                <XAxis dataKey="month" stroke="hsl(215,15%,55%)" fontSize={11} fontFamily="JetBrains Mono" />
-                <YAxis stroke="hsl(215,15%,55%)" fontSize={11} fontFamily="JetBrains Mono" />
+              <BarChart data={weatherChart} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(0,0%,15%)" />
+                <XAxis type="number" stroke="hsl(0,0%,50%)" fontSize={11} fontFamily="JetBrains Mono" />
+                <YAxis dataKey="condition" type="category" stroke="hsl(0,0%,50%)" fontSize={11} fontFamily="JetBrains Mono" width={70} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Line type="monotone" dataKey="co2" stroke="hsl(0,75%,55%)" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="saved" stroke="hsl(160,70%,45%)" strokeWidth={2} dot={false} />
-              </LineChart>
+                <Bar dataKey="congestion" fill="hsl(0,75%,50%)" radius={[0, 4, 4, 0]} name="Congestion %" />
+                <Bar dataKey="volume" fill="hsl(145,65%,45%)" radius={[0, 4, 4, 0]} name="Volume (K)" />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </motion.div>

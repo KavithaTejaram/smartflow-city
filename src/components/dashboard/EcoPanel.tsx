@@ -1,11 +1,15 @@
 import { motion } from "framer-motion";
 import { Leaf, Fuel, Zap, Wind } from "lucide-react";
+import { MONTHLY_TRENDS } from "@/data/trafficData";
+
+const totalEnvImpact = MONTHLY_TRENDS.reduce((s, m) => s + m.envImpact, 0);
+const avgEnvImpact = Math.round(totalEnvImpact / MONTHLY_TRENDS.length);
 
 const metrics = [
-  { label: "Fuel Saved", value: "1,245 L", icon: Fuel, delta: "+12% today" },
-  { label: "CO₂ Reduced", value: "3.2 tons", icon: Wind, delta: "+8% today" },
+  { label: "Fuel Saved", value: "1,245 L", icon: Fuel, delta: "Optimized routing" },
+  { label: "CO₂ Reduced", value: `${(avgEnvImpact * 0.03).toFixed(1)} tons`, icon: Wind, delta: `Impact index: ${avgEnvImpact}` },
   { label: "EV Priority", value: "Active", icon: Zap, delta: "23 EVs routed" },
-  { label: "Idle Reduction", value: "34%", icon: Leaf, delta: "vs yesterday" },
+  { label: "Idle Reduction", value: "34%", icon: Leaf, delta: "Signal optimization" },
 ];
 
 const EcoPanel = () => (
