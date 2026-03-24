@@ -23,8 +23,10 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AppNavbar />
-        <div className="container pt-20 pb-4">
+        <div className="container pt-20 pb-4 space-y-4">
           <WeatherPanel />
+          <TrafficPanel />
+          <BengaluruMap />
         </div>
         <Routes>
           <Route path="/" element={<Home />} />
